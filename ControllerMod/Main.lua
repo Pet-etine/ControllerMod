@@ -8,13 +8,16 @@ local screenHeight = Turbine.UI.Display:GetHeight();
 local windowWidth = 440;
 local windowHeight = 320;
 local posX = (screenWidth - windowWidth) / 2;
-local posY = screenHeight - windowHeight - 140; 
+local posY = screenHeight - windowHeight - 5; 
 
 ControllerWindow = Turbine.UI.Window();
 ControllerWindow:SetSize(windowWidth, windowHeight);
 ControllerWindow:SetPosition(posX, posY);
 ControllerWindow:SetVisible(true);
 ControllerWindow:SetMouseVisible(true);
+
+-- Dark Semi-Transparent Backdrop to cover native HUD elements underneath
+ControllerWindow:SetBackColor(Turbine.UI.Color(0.95, 0.05, 0.05, 0.08)); 
 
 -- Draggable Window Setup (Ctrl + Left Click Drag)
 local dragging = false;
@@ -126,6 +129,8 @@ function BuildHotbarCluster(parentX, parentY, titleText, titleColor)
     clusterGroup:SetParent(ControllerWindow);
     clusterGroup:SetSize(200, 150);
     clusterGroup:SetPosition(parentX, parentY);
+    -- Pass mouse clicks on empty cluster space through to the main window for dragging
+    clusterGroup:SetMouseVisible(false);
 
     local title = Turbine.UI.Label();
     title:SetParent(clusterGroup);
@@ -154,9 +159,9 @@ end
 BuildHotbarCluster(10,  0,   "[ BASE INPUTS ]", cyanColor);
 BuildHotbarCluster(220, 0,   "[ LB MODIFIER ]", greenColor);
 BuildHotbarCluster(10,  155, "[ RB MODIFIER ]", orangeColor);
-BuildHotbarCluster(220, 155, "[ LB+RB COMBO ]", purpleColor);
+BuildHotbarCluster(220, 155, "[ LT MODIFIER ]", purpleColor);
 
 -- 6. Load Saved Skills on Startup
 LoadQuickslots();
 
-Turbine.Shell.WriteLine("Controller Hotbar Loaded with Clean Arrows & Auto-Save!");
+Turbine.Shell.WriteLine("Controller Hotbar Overlay Updated!");
