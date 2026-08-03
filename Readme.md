@@ -68,6 +68,6 @@ For the smoothest experience, search for and apply the community layout named Pa
     
     ### 📜 Credits & Acknowledgments
 
-* **Author & Developer:** Patetine
+* **Author & Developer:** Pet.e-tine
 * **AI Collaborator:** Gemini (Code Assistance & Documentation Support)
 * **Framework:** Powered by the LOTRO API (`Turbine.UI`)
