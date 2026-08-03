@@ -1,8 +1,3 @@
-🎮 Controller Hotbar Overlay – Setup Guide
-
-This plugin provides an on-screen cross-hotbar overlay designed specifically for controller play in Lord of the Rings Online. It translates your physical controller inputs into in-game skill execution seamlessly using modifier keys.
-📦 Installation Guide
-
 # 🎮 Controller Hotbar Overlay – Setup Guide
 
 This plugin provides an on-screen cross-hotbar overlay designed specifically for controller play in *Lord of the Rings Online*. It translates your physical controller inputs into in-game skill execution seamlessly using modifier keys.
