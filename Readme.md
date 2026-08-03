@@ -65,3 +65,9 @@ For the smoothest experience, search for and apply the community layout named Pa
     Opacity Control: Open /plugins manager, select ControllerMod, and click the Options tab to fine-tune the backdrop and frame transparency using the built-in slider.
 
     Quickslot Drag-and-Drop: Drag skills, items, or macros directly from your character panel onto any overlay slot. Make it so that they match the button set on the configuration.
+    
+    ### 📜 Credits & Acknowledgments
+
+* **Author & Developer:** Patetine
+* **AI Collaborator:** Gemini (Code Assistance & Documentation Support)
+* **Framework:** Powered by the LOTRO API (`Turbine.UI`)
