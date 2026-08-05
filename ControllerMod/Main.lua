@@ -3,8 +3,10 @@ import "Turbine.UI.Lotro";
 
 -- Declare functions early so they are accessible everywhere in file scope
 local UpdateBackdropOpacity;
+local UpdateAuxOpacity;
 local SavePluginData;
 local LoadPluginData;
+local showAuxPanel = true;
 
 -- 1. Setup Display & Main Window Coordinates
 local screenWidth = Turbine.UI.Display:GetWidth();
@@ -43,7 +45,7 @@ ControllerWindow:SetPosition(defaultX, defaultY);
 ControllerWindow:SetVisible(true);
 ControllerWindow:SetMouseVisible(true);
 
--- Container for the frame elements
+-- Container for the main frame elements
 local backdropPanel = Turbine.UI.Control();
 backdropPanel:SetParent(ControllerWindow);
 backdropPanel:SetSize(windowWidth, windowHeight);
@@ -51,68 +53,152 @@ backdropPanel:SetPosition(0, 0);
 backdropPanel:SetMouseVisible(false);
 
 local frameBorderThickness = 2;
-local frameTop, frameBottom, frameLeft, frameRight;
 
--- Create Frame Lines inside the container
+-- Helper to create golden UI frame lines
 local function CreateUIFrame(parent, width, height)
-    -- Top Border
-    frameTop = Turbine.UI.Control();
+    local frameTop = Turbine.UI.Control();
     frameTop:SetParent(parent);
     frameTop:SetSize(width, frameBorderThickness);
     frameTop:SetPosition(0, 0);
 
-    -- Bottom Border
-    frameBottom = Turbine.UI.Control();
+    local frameBottom = Turbine.UI.Control();
     frameBottom:SetParent(parent);
     frameBottom:SetSize(width, frameBorderThickness);
     frameBottom:SetPosition(0, height - frameBorderThickness);
 
-    -- Left Border
-    frameLeft = Turbine.UI.Control();
+    local frameLeft = Turbine.UI.Control();
     frameLeft:SetParent(parent);
     frameLeft:SetSize(frameBorderThickness, height);
     frameLeft:SetPosition(0, 0);
 
-    -- Right Border
-    frameRight = Turbine.UI.Control();
+    local frameRight = Turbine.UI.Control();
     frameRight:SetParent(parent);
     frameRight:SetSize(frameBorderThickness, height);
     frameRight:SetPosition(width - frameBorderThickness, 0);
+
+    return frameTop, frameBottom, frameLeft, frameRight;
 end
 
-CreateUIFrame(backdropPanel, windowWidth, windowHeight);
+local mainTop, mainBottom, mainLeft, mainRight = CreateUIFrame(backdropPanel, windowWidth, windowHeight);
 
--- Default opacity value
+-- Default opacity values
 local currentOpacity = 0.95;
+local currentAuxOpacity = 0.95;
 
+-- Auxiliary Reference Window (Sticks, View, Menu, RT)
+AuxWindow = Turbine.UI.Window();
+AuxWindow:SetSize(220, 220); -- Resized to accommodate extra binding detail
+AuxWindow:SetPosition(ControllerWindow:GetLeft() + ControllerWindow:GetWidth() + 10, ControllerWindow:GetTop());
+AuxWindow:SetVisible(showAuxPanel);
+
+local auxBackdropPanel = Turbine.UI.Control();
+auxBackdropPanel:SetParent(AuxWindow);
+auxBackdropPanel:SetSize(220, 220);
+auxBackdropPanel:SetPosition(0, 0);
+auxBackdropPanel:SetMouseVisible(false);
+
+local auxTop, auxBottom, auxLeft, auxRight = CreateUIFrame(auxBackdropPanel, 220, 220);
+
+local auxTitle = Turbine.UI.Label();
+auxTitle:SetParent(AuxWindow);
+auxTitle:SetSize(220, 25);
+auxTitle:SetPosition(0, 8);
+auxTitle:SetTextAlignment(Turbine.UI.ContentAlignment.MiddleCenter);
+auxTitle:SetText("[ SYSTEM & EXTRA ]");
+auxTitle:SetForeColor(Turbine.UI.Color(1, 0.9, 0.8, 0.3));
+
+-- Auxiliary Texture Map
+local AuxIcons = {
+    RT   = ICON_PATH .. "rt.tga",
+    LS   = ICON_PATH .. "ls.tga",
+    RS   = ICON_PATH .. "rs.tga",
+    VIEW = ICON_PATH .. "view.tga",
+    MENU = ICON_PATH .. "menu.tga"
+}
+
+local function AddAuxRow(yPos, iconPath, labelText, rowHeight)
+    local h = rowHeight or 36;
+    
+    -- Icon Container (32x32 bounding box)
+    local icon = Turbine.UI.Control();
+    icon:SetParent(AuxWindow);
+    icon:SetSize(32, 32);
+    icon:SetPosition(12, yPos);
+    
+    -- Disable forced stretching so textures render crisp without edge clipping
+    icon:SetStretchMode(0);
+    
+    if (type(iconPath) == "string" and iconPath ~= "") then
+        local success = pcall(function()
+            icon:SetBackground(iconPath);
+        end);
+        if not success then
+            icon:SetBackColor(Turbine.UI.Color(0.3, 0.3, 0.3));
+        end
+    end
+
+    -- Label Container (Offset to the right to accommodate 32px icons)
+    local lbl = Turbine.UI.Label();
+    lbl:SetParent(AuxWindow);
+    lbl:SetSize(160, h);
+    lbl:SetPosition(50, yPos);
+    lbl:SetText(labelText);
+    lbl:SetForeColor(Turbine.UI.Color(1, 0.85, 0.85, 0.85));
+end
+
+-- Render Rows with adjusted vertical spacing
+AddAuxRow(35,  AuxIcons.RT,   "Click", 28);
+AddAuxRow(68,  AuxIcons.LS,   "Target\n2x: Target object", 36);
+AddAuxRow(108, AuxIcons.RS,   "Camera", 28);
+AddAuxRow(140, AuxIcons.VIEW, "Map\n2x: Journal | Hold: Char", 36);
+AddAuxRow(180, AuxIcons.MENU, "Inventory\n2x: Skills | Hold: Menu", 36);
+
+-- Opacity Controllers
 UpdateBackdropOpacity = function(alpha)
     currentOpacity = alpha;
-    
-    -- Main background fill
     ControllerWindow:SetBackColor(Turbine.UI.Color(currentOpacity, 0.05, 0.05, 0.08));
     
-    -- Frame lines fade synchronously with the background opacity
     local frameColor = Turbine.UI.Color(currentOpacity, 0.8, 0.6, 0.2);
-    if (frameTop) then
-        frameTop:SetBackColor(frameColor);
-        frameBottom:SetBackColor(frameColor);
-        frameLeft:SetBackColor(frameColor);
-        frameRight:SetBackColor(frameColor);
+    if (mainTop) then
+        mainTop:SetBackColor(frameColor);
+        mainBottom:SetBackColor(frameColor);
+        mainLeft:SetBackColor(frameColor);
+        mainRight:SetBackColor(frameColor);
     end
 end
 
--- Apply initial opacity to both backdrop and frame
-UpdateBackdropOpacity(currentOpacity);
+UpdateAuxOpacity = function(alpha)
+    currentAuxOpacity = alpha;
+    AuxWindow:SetBackColor(Turbine.UI.Color(currentAuxOpacity, 0.05, 0.05, 0.08));
+    
+    local frameColor = Turbine.UI.Color(currentAuxOpacity, 0.8, 0.6, 0.2);
+    if (auxTop) then
+        auxTop:SetBackColor(frameColor);
+        auxBottom:SetBackColor(frameColor);
+        auxLeft:SetBackColor(frameColor);
+        auxRight:SetBackColor(frameColor);
+    end
+end
 
--- 2. Persistence Engine (Save Position + Quickslots)
-local quickslotsList = {}; -- Stores references to all 32 quickslot objects
+-- Apply initial opacities
+UpdateBackdropOpacity(currentOpacity);
+UpdateAuxOpacity(currentAuxOpacity);
+
+-- 2. Persistence Engine
+local quickslotsList = {};
 
 SavePluginData = function()
     local left, top = ControllerWindow:GetPosition();
+    local auxLeft, auxTop = AuxWindow:GetPosition();
+    
     local saveData = {
         opacity = currentOpacity,
+        auxOpacity = currentAuxOpacity,
         x = left,
         y = top,
+        auxX = auxLeft,
+        auxY = auxTop,
+        showAux = showAuxPanel,
         slots = {}
     };
     for i, qs in ipairs(quickslotsList) do
@@ -130,17 +216,28 @@ end
 LoadPluginData = function()
     local savedData = Turbine.PluginData.Load(Turbine.DataScope.Character, "ControllerModData");
     if (type(savedData) == "table") then
-        -- Restore saved opacity
         if (savedData.opacity) then
             UpdateBackdropOpacity(savedData.opacity);
         end
+        if (savedData.auxOpacity) then
+            UpdateAuxOpacity(savedData.auxOpacity);
+        end
         
-        -- Restore saved window position
         if (savedData.x and savedData.y) then
             ControllerWindow:SetPosition(savedData.x, savedData.y);
         end
         
-        -- Restore saved quickslot shortcuts
+        if (savedData.auxX and savedData.auxY) then
+            AuxWindow:SetPosition(savedData.auxX, savedData.auxY);
+        elseif (savedData.x and savedData.y) then
+            AuxWindow:SetPosition(savedData.x + ControllerWindow:GetWidth() + 10, savedData.y);
+        end
+        
+        if (savedData.showAux ~= nil) then
+            showAuxPanel = savedData.showAux;
+            AuxWindow:SetVisible(showAuxPanel);
+        end
+        
         local slotsData = savedData.slots or savedData;
         if (type(slotsData) == "table") then
             for i, data in pairs(slotsData) do
@@ -155,35 +252,58 @@ LoadPluginData = function()
     end
 end
 
--- Draggable Window Setup (Ctrl + Left Click Drag)
-local dragging = false;
-local startX, startY;
+-- Draggable Windows
+local draggingMain = false;
+local mainStartX, mainStartY;
 
 ControllerWindow.MouseDown = function(sender, args)
     if (args.Button == Turbine.UI.MouseButton.Left and ControllerWindow:IsControlKeyDown()) then
-        dragging = true;
-        startX = args.X;
-        startY = args.Y;
+        draggingMain = true;
+        mainStartX = args.X;
+        mainStartY = args.Y;
     end
 end
 
 ControllerWindow.MouseMove = function(sender, args)
-    if (dragging) then
+    if (draggingMain) then
         local left, top = ControllerWindow:GetPosition();
-        ControllerWindow:SetPosition(left + (args.X - startX), top + (args.Y - startY));
+        ControllerWindow:SetPosition(left + (args.X - mainStartX), top + (args.Y - mainStartY));
     end
 end
 
 ControllerWindow.MouseUp = function(sender, args)
-    if (args.Button == Turbine.UI.MouseButton.Left) then
-        if (dragging) then
-            dragging = false;
-            SavePluginData(); -- Save position as soon as drag finishes
-        end
+    if (args.Button == Turbine.UI.MouseButton.Left and draggingMain) then
+        draggingMain = false;
+        SavePluginData();
     end
 end
 
--- 3. Helper to Create Labelled Quickslots with TGA Button Icons
+local draggingAux = false;
+local auxStartX, auxStartY;
+
+AuxWindow.MouseDown = function(sender, args)
+    if (args.Button == Turbine.UI.MouseButton.Left and AuxWindow:IsControlKeyDown()) then
+        draggingAux = true;
+        auxStartX = args.X;
+        auxStartY = args.Y;
+    end
+end
+
+AuxWindow.MouseMove = function(sender, args)
+    if (draggingAux) then
+        local left, top = AuxWindow:GetPosition();
+        AuxWindow:SetPosition(left + (args.X - auxStartX), top + (args.Y - auxStartY));
+    end
+end
+
+AuxWindow.MouseUp = function(sender, args)
+    if (args.Button == Turbine.UI.MouseButton.Left and draggingAux) then
+        draggingAux = false;
+        SavePluginData();
+    end
+end
+
+-- 3. Quickslot Creation
 function CreateButtonSlot(parent, x, y, buttonIndex)
     local container = Turbine.UI.Control();
     container:SetParent(parent);
@@ -202,16 +322,10 @@ function CreateButtonSlot(parent, x, y, buttonIndex)
 
     table.insert(quickslotsList, qs);
 
--- TGA Icon Overlay
     local iconOverlay = Turbine.UI.Control();
     iconOverlay:SetParent(container);
-    
-    -- Increase display size (e.g., 28x28 instead of 20x20)
     iconOverlay:SetSize(28, 28); 
-    
-    -- Adjust position to center it nicely under the quickslot (X: 8, Y: 36)
     iconOverlay:SetPosition(8, 36); 
-    
     iconOverlay:SetMouseVisible(false);
     iconOverlay:SetStretchMode(1);
 
@@ -223,13 +337,12 @@ function CreateButtonSlot(parent, x, y, buttonIndex)
     return qs;
 end
 
--- Cluster Header Text Colors
 local cyanColor   = Turbine.UI.Color(0.3, 0.8, 1.0);
 local greenColor  = Turbine.UI.Color(0.4, 1.0, 0.4);
 local orangeColor = Turbine.UI.Color(1.0, 0.6, 0.2);
 local purpleColor = Turbine.UI.Color(0.8, 0.5, 1.0);
 
--- 4. Function to Build Hotbar Clusters
+-- 4. Build Clusters
 function BuildHotbarCluster(parentX, parentY, headerTexture, fallbackText, titleColor)
     local clusterGroup = Turbine.UI.Control();
     clusterGroup:SetParent(ControllerWindow);
@@ -237,19 +350,15 @@ function BuildHotbarCluster(parentX, parentY, headerTexture, fallbackText, title
     clusterGroup:SetPosition(parentX, parentY);
     clusterGroup:SetMouseVisible(false);
 
-    -- Header Control (Single Centered Icon)
     if (headerTexture) then
         local headerIcon = Turbine.UI.Control();
         headerIcon:SetParent(clusterGroup);
-        
-        -- Set size to match a single icon square instead of a wide banner
         headerIcon:SetSize(24, 24);         
-        headerIcon:SetPosition(88, 0);       -- Center horizontally: (200 width - 24 icon width) / 2 = 88
+        headerIcon:SetPosition(88, 0);
         headerIcon:SetMouseVisible(false);
         headerIcon:SetStretchMode(1);
         headerIcon:SetBackground(headerTexture);
     else
-        -- Fallback label if texture is missing
         local title = Turbine.UI.Label();
         title:SetParent(clusterGroup);
         title:SetSize(200, 18);
@@ -259,13 +368,11 @@ function BuildHotbarCluster(parentX, parentY, headerTexture, fallbackText, title
         title:SetForeColor(titleColor);
     end
 
-    -- D-Pad
     CreateButtonSlot(clusterGroup, 34, 25, 5); -- UP
     CreateButtonSlot(clusterGroup, 34, 97, 6); -- DOWN
     CreateButtonSlot(clusterGroup, 2,  61, 7); -- LEFT
     CreateButtonSlot(clusterGroup, 66, 61, 8); -- RIGHT
 
-    -- Face Buttons
     CreateButtonSlot(clusterGroup, 134, 97, 1); -- A
     CreateButtonSlot(clusterGroup, 166, 61, 2); -- B
     CreateButtonSlot(clusterGroup, 102, 61, 3); -- X
@@ -274,15 +381,15 @@ function BuildHotbarCluster(parentX, parentY, headerTexture, fallbackText, title
     return clusterGroup;
 end
 
--- 5. Build Layout (TL: LB | TR: RB | BL: LT | BR: BASE)
-BuildHotbarCluster(10,  0,   HeaderIcons.LB,   "[ LB MODIFIER ]", greenColor);  -- Top Left
-BuildHotbarCluster(220, 0,   HeaderIcons.RB,   "[ RB MODIFIER ]", orangeColor); -- Top Right
-BuildHotbarCluster(10,  160, HeaderIcons.LT,   "[ LT MODIFIER ]", purpleColor); -- Bottom Left
-BuildHotbarCluster(220, 160, HeaderIcons.BASE, "[ BASE INPUTS ]", cyanColor);   -- Bottom Right
+-- 5. Build Layout
+BuildHotbarCluster(10,  0,   HeaderIcons.LB,   "[ LB MODIFIER ]", greenColor);
+BuildHotbarCluster(220, 0,   HeaderIcons.RB,   "[ RB MODIFIER ]", orangeColor);
+BuildHotbarCluster(10,  160, HeaderIcons.LT,   "[ LT MODIFIER ]", purpleColor);
+BuildHotbarCluster(220, 160, HeaderIcons.BASE, "[ BASE INPUTS ]", cyanColor);
 
--- 6. Options Panel Engine with Slider
+-- 6. Options Panel
 local optionsPanel = Turbine.UI.Control();
-optionsPanel:SetSize(400, 200);
+optionsPanel:SetSize(400, 260);
 
 local optionsTitle = Turbine.UI.Label();
 optionsTitle:SetParent(optionsPanel);
@@ -292,7 +399,7 @@ optionsTitle:SetText("Controller Hotbar Overlay Options");
 optionsTitle:SetFont(Turbine.UI.Lotro.Font.TrajanPro18);
 optionsTitle:SetForeColor(Turbine.UI.Color(1, 0.9, 0.2));
 
--- Slider Value Label
+-- Main Opacity Controls
 local opacityLabel = Turbine.UI.Label();
 opacityLabel:SetParent(optionsPanel);
 opacityLabel:SetSize(350, 20);
@@ -301,15 +408,14 @@ opacityLabel:SetFont(Turbine.UI.Lotro.Font.Verdana14);
 
 local function UpdateSliderLabel(val)
     local pct = math.floor((val or 0.95) * 100);
-    opacityLabel:SetText("Backdrop Opacity: " .. tostring(pct) .. "%");
+    opacityLabel:SetText("Main Overlay Opacity: " .. tostring(pct) .. "%");
 end
 
--- LOTRO Horizontal Scrollbar acting as a Opacity Slider
 local slider = Turbine.UI.Lotro.ScrollBar();
 slider:SetParent(optionsPanel);
 slider:SetOrientation(Turbine.UI.Orientation.Horizontal);
 slider:SetSize(250, 10);
-slider:SetPosition(10, 75);
+slider:SetPosition(10, 70);
 slider:SetMinimum(0);
 slider:SetMaximum(100);
 slider:SetSmallChange(1);
@@ -322,6 +428,52 @@ slider.ValueChanged = function()
     local newOpacity = slider:GetValue() / 100;
     UpdateBackdropOpacity(newOpacity);
     UpdateSliderLabel(newOpacity);
+    SavePluginData();
+end
+
+-- Aux Opacity Controls
+local auxOpacityLabel = Turbine.UI.Label();
+auxOpacityLabel:SetParent(optionsPanel);
+auxOpacityLabel:SetSize(350, 20);
+auxOpacityLabel:SetPosition(10, 95);
+auxOpacityLabel:SetFont(Turbine.UI.Lotro.Font.Verdana14);
+
+local function UpdateAuxSliderLabel(val)
+    local pct = math.floor((val or 0.95) * 100);
+    auxOpacityLabel:SetText("Info Box Opacity: " .. tostring(pct) .. "%");
+end
+
+local auxSlider = Turbine.UI.Lotro.ScrollBar();
+auxSlider:SetParent(optionsPanel);
+auxSlider:SetOrientation(Turbine.UI.Orientation.Horizontal);
+auxSlider:SetSize(250, 10);
+auxSlider:SetPosition(10, 120);
+auxSlider:SetMinimum(0);
+auxSlider:SetMaximum(100);
+auxSlider:SetSmallChange(1);
+auxSlider:SetLargeChange(10);
+auxSlider:SetValue(math.floor(currentAuxOpacity * 100));
+
+UpdateAuxSliderLabel(currentAuxOpacity);
+
+auxSlider.ValueChanged = function()
+    local newOpacity = auxSlider:GetValue() / 100;
+    UpdateAuxOpacity(newOpacity);
+    UpdateAuxSliderLabel(newOpacity);
+    SavePluginData();
+end
+
+-- Auxiliary Panel Toggle Checkbox
+local auxCheckbox = Turbine.UI.Lotro.CheckBox();
+auxCheckbox:SetParent(optionsPanel);
+auxCheckbox:SetPosition(10, 150);
+auxCheckbox:SetSize(250, 20);
+auxCheckbox:SetText(" Show Utility Info Box");
+auxCheckbox:SetChecked(showAuxPanel);
+
+auxCheckbox.CheckedChanged = function()
+    showAuxPanel = auxCheckbox:IsChecked();
+    AuxWindow:SetVisible(showAuxPanel);
     SavePluginData();
 end
 
@@ -339,9 +491,15 @@ end
 -- 7. Load Saved Data
 LoadPluginData();
 
--- Sync slider position with loaded opacity
+-- Sync UI state
 if (slider ~= nil) then
     slider:SetValue(math.floor(currentOpacity * 100));
 end
+if (auxSlider ~= nil) then
+    auxSlider:SetValue(math.floor(currentAuxOpacity * 100));
+end
+if (auxCheckbox ~= nil) then
+    auxCheckbox:SetChecked(showAuxPanel);
+end
 
-Turbine.Shell.WriteLine("Controller Hotbar Loaded with Slider Options!");
+Turbine.Shell.WriteLine("Controller Hotbar Loaded with Options!");
