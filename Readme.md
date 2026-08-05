@@ -71,3 +71,17 @@ For the smoothest experience, search for and apply the community layout named Pa
 * **Author & Developer:** Pet.e-tine
 * **AI Collaborator:** Gemini (Code Assistance & Documentation Support)
 * **Framework:** Powered by the LOTRO API (`Turbine.UI`)
+
+---
+
+### Third-Party Visual Assets & Licenses
+
+* **Xbox Series Button Icons and Controls:** 
+  * **Author:** Zacksly (https://zacksly.itch.io)
+  * **License:** [CC BY 3.0](http://creativecommons.org/licenses/by/3.0/)
+  * **Note:** Original assets were modified (cropped, scaled, and converted to uncompressed 32-bit TGA format) for LOTRO UI compatibility.
+
+* **Game Controller Icon:** 
+  * **Source:** [Icons8](https://icons8.com/icon/11907/game-controller)
+  * **License:** [CC BY 3.0](http://creativecommons.org/licenses/by/3.0/)
+  * **Note:** Adapted for plugin manager and icon branding.
