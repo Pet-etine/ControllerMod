@@ -274,11 +274,11 @@ function BuildHotbarCluster(parentX, parentY, headerTexture, fallbackText, title
     return clusterGroup;
 end
 
--- 5. Build Layout
-BuildHotbarCluster(10,  0,   HeaderIcons.BASE, "[ BASE INPUTS ]", cyanColor);
-BuildHotbarCluster(220, 0,   HeaderIcons.LB,   "[ LB MODIFIER ]", greenColor);
-BuildHotbarCluster(10,  160, HeaderIcons.RB,   "[ RB MODIFIER ]", orangeColor);
-BuildHotbarCluster(220, 160, HeaderIcons.LT,   "[ LT MODIFIER ]", purpleColor);
+-- 5. Build Layout (TL: LB | TR: RB | BL: LT | BR: BASE)
+BuildHotbarCluster(10,  0,   HeaderIcons.LB,   "[ LB MODIFIER ]", greenColor);  -- Top Left
+BuildHotbarCluster(220, 0,   HeaderIcons.RB,   "[ RB MODIFIER ]", orangeColor); -- Top Right
+BuildHotbarCluster(10,  160, HeaderIcons.LT,   "[ LT MODIFIER ]", purpleColor); -- Bottom Left
+BuildHotbarCluster(220, 160, HeaderIcons.BASE, "[ BASE INPUTS ]", cyanColor);   -- Bottom Right
 
 -- 6. Options Panel Engine with Slider
 local optionsPanel = Turbine.UI.Control();
