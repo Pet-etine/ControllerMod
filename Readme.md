@@ -6,7 +6,7 @@ This plugin provides an on-screen cross-hotbar overlay designed specifically for
 
 ### 📦 Installation Guide
 
-1. **Download** the provided zip file. ControllerMod.zip
+1. **Download** the provided zip file (`ControllerMod.zip`).
 2. **Extract** the contents into your LOTRO Plugins directory:
    * **Windows:**
      ```text
@@ -27,7 +27,7 @@ This plugin provides an on-screen cross-hotbar overlay designed specifically for
    .../Documents/The Lord of the Rings Online/Plugins/Patetine/
    └── ControllerMod.plugin
 
-4. **Load the Plugin In-Game:**
+    Load the Plugin In-Game:
 
         Open the chat box in-game and type /plugins manager.
 
@@ -41,19 +41,19 @@ The overlay is split into 4 primary input clusters of 8 slots each (4 D-Pad dire
 
     Number Keys (1 – 8): Bound to your core action inputs across all clusters:
 
-        D-Pad: 5 (Up), 6 (Down), 7 (Left), 8 (Right) 
+        D-Pad: 5 (Up), 6 (Down), 7 (Left), 8 (Right)
 
-        Face Buttons: 1 (A), 2 (B), 3 (X), 4 (Y)  
+        Face Buttons: 1 (A / Cross), 2 (B / Circle), 3 (X / Square), 4 (Y / Triangle)
 
     Modifier Triggers & Bumpers:
 
         Base Inputs (No Modifier): Triggers keys 1 through 8 directly.
 
-        LB Cluster (Shift): Holding LB sends Shift + 1 through Shift + 8.
+        LB / L1 Cluster (Shift): Holding LB / L1 sends Shift + 1 through Shift + 8.
 
-        RB Cluster (Ctrl): Holding RB sends Ctrl + 1 through Ctrl + 8.
+        RB / R1 Cluster (Ctrl): Holding RB / R1 sends Ctrl + 1 through Ctrl + 8.
 
-        LT Cluster (Alt): Holding LT sends Alt + 1 through Alt + 8.
+        LT / L2 Cluster (Alt): Holding LT / L2 sends Alt + 1 through Alt + 8.
 
 🔧 Steam / Controller Configuration
 
@@ -62,26 +62,34 @@ For the smoothest experience, search for and apply the community layout named Pa
 
     Repositioning: Hold Ctrl + Left Click and drag the overlay box anywhere on your screen to adjust its position.
 
-    Opacity Control: Open /plugins manager, select ControllerMod, and click the Options tab to fine-tune the backdrop and frame transparency using the built-in slider.
+    Controller Style Swapping: Open /plugins manager, select ControllerMod, navigate to the Options tab, and toggle between Xbox and PlayStation button icon styles to match your gamepad setup.
 
-    Quickslot Drag-and-Drop: Drag skills, items, or macros directly from your character panel onto any overlay slot. Make it so that they match the button set on the configuration.
-    
-    ### 📜 Credits & Acknowledgments
+    Opacity Control: Fine-tune the backdrop and frame transparency using the opacity slider in the Plugin Manager Options tab.
 
-* **Author & Developer:** Pet.e-tine
-* **AI Collaborator:** Gemini (Code Assistance & Documentation Support)
-* **Framework:** Powered by the LOTRO API (`Turbine.UI`)
+    Quickslot Drag-and-Drop: Drag skills, items, or macros directly from your character panel onto any overlay slot so they match your preferred controller layout.
 
----
+📜 Credits & Acknowledgments
 
-### Third-Party Visual Assets & Licenses
+    Author & Developer: Pet.e-tine
 
-* **Xbox Series Button Icons and Controls:** 
-  * **Author:** Zacksly (https://zacksly.itch.io)
-  * **License:** [CC BY 3.0](http://creativecommons.org/licenses/by/3.0/)
-  * **Note:** Original assets were modified (cropped, scaled, and converted to uncompressed 32-bit TGA format) for LOTRO UI compatibility.
+    AI Collaborator: Gemini (Code Assistance & Documentation Support)
 
-* **Game Controller Icon:** 
-  * **Source:** [Icons8](https://icons8.com/icon/11907/game-controller)
-  * **License:** [CC BY 3.0](http://creativecommons.org/licenses/by/3.0/)
-  * **Note:** Adapted for plugin manager and icon branding.
+    Framework: Powered by the LOTRO API (Turbine.UI)
+
+Third-Party Visual Assets & Licenses
+
+    Xbox Series & PlayStation Button Icons & UI Assets:
+
+        Author: Zacksly (zacksly.itch.io)
+
+        License: CC BY 3.0
+
+        Note: Original assets were modified (cropped, scaled, color-adjusted, and formatted as uncompressed 32-bit TGA files) for LOTRO UI compatibility and dynamic style-swapping support.
+
+    Game Controller Icon:
+
+        Source: Icons8
+
+        License: CC BY 3.0
+
+        Note: Adapted for plugin manager and icon branding.
