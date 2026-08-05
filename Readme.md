@@ -1,8 +1,3 @@
-🎮 Controller Hotbar Overlay – Setup Guide
-
-This plugin provides an on-screen cross-hotbar overlay designed specifically for controller play in Lord of the Rings Online. It translates your physical controller inputs into in-game skill execution seamlessly using modifier keys.
-📦 Installation Guide
-
 # 🎮 Controller Hotbar Overlay – Setup Guide
 
 This plugin provides an on-screen cross-hotbar overlay designed specifically for controller play in *Lord of the Rings Online*. It translates your physical controller inputs into in-game skill execution seamlessly using modifier keys.
@@ -70,3 +65,9 @@ For the smoothest experience, search for and apply the community layout named Pa
     Opacity Control: Open /plugins manager, select ControllerMod, and click the Options tab to fine-tune the backdrop and frame transparency using the built-in slider.
 
     Quickslot Drag-and-Drop: Drag skills, items, or macros directly from your character panel onto any overlay slot. Make it so that they match the button set on the configuration.
+    
+    ### 📜 Credits & Acknowledgments
+
+* **Author & Developer:** Pet.e-tine
+* **AI Collaborator:** Gemini (Code Assistance & Documentation Support)
+* **Framework:** Powered by the LOTRO API (`Turbine.UI`)
