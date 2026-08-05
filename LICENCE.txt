@@ -1,0 +1,43 @@
+MIT License
+
+Copyright (c) 2026 Pet.e-tine
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+===============================================================================
+THIRD-PARTY ASSETS & ATTRIBUTION
+===============================================================================
+
+This project incorporates third-party visual assets licensed under the 
+Creative Commons Attribution 3.0 Unported (CC BY 3.0) License.
+
+1. Xbox Series Button Icons and Controls
+   - Author: Zacksly
+   - Source: https://zacksly.itch.io
+   - License: CC BY 3.0 (http://creativecommons.org/licenses/by/3.0/)
+   - Modifications: Original graphics were cropped, resized, and converted to 
+     32-bit uncompressed TGA format for compatibility with the LOTRO UI.
+
+2. Game Controller Icon
+   - Source: Icons8 (https://icons8.com/icon/11907/game-controller)
+   - License: CC BY 3.0 (http://creativecommons.org/licenses/by/3.0/)
+   - Modifications: Adapted for plugin manager listing and overlay branding.
+
+To view a copy of the Creative Commons Attribution 3.0 Unported License, visit:
+http://creativecommons.org/licenses/by/3.0/
