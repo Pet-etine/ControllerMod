@@ -17,6 +17,26 @@ local windowHeight = 320;
 local defaultX = (screenWidth - windowWidth) / 2;
 local defaultY = screenHeight - windowHeight - 100; 
 
+-- Icon Texture Path Map (Relative to Plugins folder)
+local ICON_PATH = "Patetine/ControllerMod/Icons/"
+
+local ButtonIcons = {
+    [1] = ICON_PATH .. "btn_a.tga",     -- Button 1 (A)
+    [2] = ICON_PATH .. "btn_b.tga",     -- Button 2 (B)
+    [3] = ICON_PATH .. "btn_x.tga",     -- Button 3 (X)
+    [4] = ICON_PATH .. "btn_y.tga",     -- Button 4 (Y)
+    [5] = ICON_PATH .. "dpad_up.tga",   -- Button 5 (D-Pad Up)
+    [6] = ICON_PATH .. "dpad_down.tga", -- Button 6 (D-Pad Down)
+    [7] = ICON_PATH .. "dpad_left.tga", -- Button 7 (D-Pad Left)
+    [8] = ICON_PATH .. "dpad_right.tga" -- Button 8 (D-Pad Right)
+}
+local HeaderIcons = {
+    BASE = ICON_PATH .. "hdr_base.tga",
+    LB   = ICON_PATH .. "hdr_lb.tga",
+    RB   = ICON_PATH .. "hdr_rb.tga",
+    LT   = ICON_PATH .. "hdr_lt.tga"
+}
+
 ControllerWindow = Turbine.UI.Window();
 ControllerWindow:SetSize(windowWidth, windowHeight);
 ControllerWindow:SetPosition(defaultX, defaultY);
@@ -163,8 +183,8 @@ ControllerWindow.MouseUp = function(sender, args)
     end
 end
 
--- 3. Helper to Create Labelled Quickslots with High-Contrast Badges
-function CreateButtonSlot(parent, x, y, labelText, labelColor)
+-- 3. Helper to Create Labelled Quickslots with TGA Button Icons
+function CreateButtonSlot(parent, x, y, buttonIndex)
     local container = Turbine.UI.Control();
     container:SetParent(parent);
     container:SetSize(45, 60);
@@ -182,65 +202,83 @@ function CreateButtonSlot(parent, x, y, labelText, labelColor)
 
     table.insert(quickslotsList, qs);
 
-    local badge = Turbine.UI.Control();
-    badge:SetParent(container);
-    badge:SetSize(36, 16);
-    badge:SetPosition(4, 38);
-    badge:SetBackColor(Turbine.UI.Color(0.1, 0.1, 0.1));
+-- TGA Icon Overlay
+    local iconOverlay = Turbine.UI.Control();
+    iconOverlay:SetParent(container);
+    
+    -- Increase display size (e.g., 28x28 instead of 20x20)
+    iconOverlay:SetSize(28, 28); 
+    
+    -- Adjust position to center it nicely under the quickslot (X: 8, Y: 36)
+    iconOverlay:SetPosition(8, 36); 
+    
+    iconOverlay:SetMouseVisible(false);
+    iconOverlay:SetStretchMode(1);
 
-    local label = Turbine.UI.Label();
-    label:SetParent(badge);
-    label:SetSize(36, 16);
-    label:SetPosition(0, 0);
-    label:SetTextAlignment(Turbine.UI.ContentAlignment.MiddleCenter);
-    label:SetText(labelText);
-    label:SetForeColor(labelColor or Turbine.UI.Color(1, 0.9, 0.2));
+    local iconPath = ButtonIcons[buttonIndex];
+    if (iconPath) then
+        iconOverlay:SetBackground(iconPath);
+    end
 
     return qs;
 end
 
--- Colors
+-- Cluster Header Text Colors
 local cyanColor   = Turbine.UI.Color(0.3, 0.8, 1.0);
 local greenColor  = Turbine.UI.Color(0.4, 1.0, 0.4);
 local orangeColor = Turbine.UI.Color(1.0, 0.6, 0.2);
 local purpleColor = Turbine.UI.Color(0.8, 0.5, 1.0);
 
 -- 4. Function to Build Hotbar Clusters
-function BuildHotbarCluster(parentX, parentY, titleText, titleColor)
+function BuildHotbarCluster(parentX, parentY, headerTexture, fallbackText, titleColor)
     local clusterGroup = Turbine.UI.Control();
     clusterGroup:SetParent(ControllerWindow);
-    clusterGroup:SetSize(200, 150);
+    clusterGroup:SetSize(200, 160);
     clusterGroup:SetPosition(parentX, parentY);
     clusterGroup:SetMouseVisible(false);
 
-    local title = Turbine.UI.Label();
-    title:SetParent(clusterGroup);
-    title:SetSize(200, 18);
-    title:SetPosition(0, 0);
-    title:SetTextAlignment(Turbine.UI.ContentAlignment.MiddleCenter);
-    title:SetText(titleText);
-    title:SetForeColor(titleColor);
+    -- Header Control (Single Centered Icon)
+    if (headerTexture) then
+        local headerIcon = Turbine.UI.Control();
+        headerIcon:SetParent(clusterGroup);
+        
+        -- Set size to match a single icon square instead of a wide banner
+        headerIcon:SetSize(24, 24);         
+        headerIcon:SetPosition(88, 0);       -- Center horizontally: (200 width - 24 icon width) / 2 = 88
+        headerIcon:SetMouseVisible(false);
+        headerIcon:SetStretchMode(1);
+        headerIcon:SetBackground(headerTexture);
+    else
+        -- Fallback label if texture is missing
+        local title = Turbine.UI.Label();
+        title:SetParent(clusterGroup);
+        title:SetSize(200, 18);
+        title:SetPosition(0, 0);
+        title:SetTextAlignment(Turbine.UI.ContentAlignment.MiddleCenter);
+        title:SetText(fallbackText);
+        title:SetForeColor(titleColor);
+    end
 
     -- D-Pad
-    CreateButtonSlot(clusterGroup, 34, 20,  "UP",  titleColor);
-    CreateButtonSlot(clusterGroup, 2,  56,  "LFT", titleColor);
-    CreateButtonSlot(clusterGroup, 66, 56,  "RGT", titleColor);
-    CreateButtonSlot(clusterGroup, 34, 92,  "DN",  titleColor);
+    CreateButtonSlot(clusterGroup, 34, 25, 5); -- UP
+    CreateButtonSlot(clusterGroup, 34, 97, 6); -- DOWN
+    CreateButtonSlot(clusterGroup, 2,  61, 7); -- LEFT
+    CreateButtonSlot(clusterGroup, 66, 61, 8); -- RIGHT
 
     -- Face Buttons
-    CreateButtonSlot(clusterGroup, 134, 20,  "Y", titleColor);
-    CreateButtonSlot(clusterGroup, 102, 56,  "X", titleColor);
-    CreateButtonSlot(clusterGroup, 166, 56,  "B", titleColor);
-    CreateButtonSlot(clusterGroup, 134, 92,  "A", titleColor);
+    CreateButtonSlot(clusterGroup, 134, 97, 1); -- A
+    CreateButtonSlot(clusterGroup, 166, 61, 2); -- B
+    CreateButtonSlot(clusterGroup, 102, 61, 3); -- X
+    CreateButtonSlot(clusterGroup, 134, 25, 4); -- Y
 
     return clusterGroup;
 end
 
 -- 5. Build Layout
-BuildHotbarCluster(10,  0,   "[ BASE INPUTS ]", cyanColor);
-BuildHotbarCluster(220, 0,   "[ LB MODIFIER ]", greenColor);
-BuildHotbarCluster(10,  155, "[ RB MODIFIER ]", orangeColor);
-BuildHotbarCluster(220, 155, "[ LT MODIFIER ]", purpleColor);
+BuildHotbarCluster(10,  0,   HeaderIcons.BASE, "[ BASE INPUTS ]", cyanColor);
+BuildHotbarCluster(220, 0,   HeaderIcons.LB,   "[ LB MODIFIER ]", greenColor);
+BuildHotbarCluster(10,  160, HeaderIcons.RB,   "[ RB MODIFIER ]", orangeColor);
+BuildHotbarCluster(220, 160, HeaderIcons.LT,   "[ LT MODIFIER ]", purpleColor);
 
 -- 6. Options Panel Engine with Slider
 local optionsPanel = Turbine.UI.Control();

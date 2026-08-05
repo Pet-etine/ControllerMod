@@ -8,6 +8,7 @@
 Usage Tips:
 • Hold Ctrl + Left-Click Drag to reposition the UI.
 • Access Plugin Options to adjust background opacity.</Description>
+    <Image>Patetine/ControllerMod/icon.tga</Image>
     </Information>
     <!-- Patetine (Namespace) -> ControllerMod (Subfolder) -> Main (.lua) -->
     <Package>Patetine.ControllerMod.Main</Package>
