@@ -12,11 +12,24 @@ local showAuxPanel = true;
 -- Active controller layout ("XBOX" or "PS")
 local currentStyle = "XBOX";
 
+-- Global UI Scale (1.0 = 100% Default Baseline)
+local currentScale = 1.0;
+
+-- Base Unscaled Dimensions (100% Scale Baseline)
+local BASE_MAIN_WIDTH  = 440;
+local BASE_MAIN_HEIGHT = 320;
+local BASE_AUX_WIDTH   = 230;
+local BASE_AUX_HEIGHT  = 230;
+
 -- Asset Directory Map
 local Paths = {
     XBOX = "Patetine/ControllerMod/Icons/",
     PS   = "Patetine/ControllerMod/Icons/PS/"
 }
+
+-- Scaling Data Repositories
+local buttonSlotData = {};
+local clusterGroupList = {};
 
 -- 1. Setup Display & Main Window Coordinates
 local screenWidth = Turbine.UI.Display:GetWidth();
@@ -65,7 +78,7 @@ local function GetHeaderIcons(style)
     local p = Paths[style] or Paths.XBOX;
     if style == "PS" then
         return {
-            BASE = p .. "home.tga", -- Set to home.tga for PS Base Inputs
+            BASE = p .. "home.tga",
             LB   = p .. "hdr_l1.tga",
             RB   = p .. "hdr_r1.tga",
             LT   = p .. "hdr_l2.tga"
@@ -102,7 +115,7 @@ local function GetAuxIcons(style)
 end
 
 ControllerWindow = Turbine.UI.Window();
-ControllerWindow:SetSize(windowWidth, windowHeight);
+ControllerWindow:SetSize(math.floor(BASE_MAIN_WIDTH * currentScale), math.floor(BASE_MAIN_HEIGHT * currentScale));
 ControllerWindow:SetPosition(defaultX, defaultY);
 ControllerWindow:SetVisible(true);
 ControllerWindow:SetMouseVisible(true);
@@ -152,6 +165,7 @@ AuxWindow = Turbine.UI.Window();
 AuxWindow:SetSize(230, 230);
 AuxWindow:SetPosition(ControllerWindow:GetLeft() + ControllerWindow:GetWidth() + 10, ControllerWindow:GetTop());
 AuxWindow:SetVisible(showAuxPanel);
+AuxWindow:SetMouseVisible(true);
 
 local auxBackdropPanel = Turbine.UI.Control();
 auxBackdropPanel:SetParent(AuxWindow);
@@ -168,12 +182,40 @@ auxTitle:SetPosition(0, 8);
 auxTitle:SetTextAlignment(Turbine.UI.ContentAlignment.MiddleCenter);
 auxTitle:SetText("[ SYSTEM & EXTRA ]");
 auxTitle:SetForeColor(Turbine.UI.Color(1, 0.9, 0.8, 0.3));
+auxTitle:SetMouseVisible(false);
+
+-- Re-apply frame line bounds dynamically when window resizes
+local function RedrawFrames()
+    local w, h = ControllerWindow:GetSize();
+    backdropPanel:SetSize(w, h);
+    if mainTop then
+        mainTop:SetSize(w, frameBorderThickness);
+        mainBottom:SetSize(w, frameBorderThickness);
+        mainBottom:SetPosition(0, h - frameBorderThickness);
+        mainLeft:SetSize(frameBorderThickness, h);
+        mainRight:SetSize(frameBorderThickness, h);
+        mainRight:SetPosition(w - frameBorderThickness, 0);
+    end
+
+    local auxW, auxH = AuxWindow:GetSize();
+    auxBackdropPanel:SetSize(auxW, auxH);
+    if auxTop then
+        auxTop:SetSize(auxW, frameBorderThickness);
+        auxBottom:SetSize(auxW, frameBorderThickness);
+        auxBottom:SetPosition(0, auxH - frameBorderThickness);
+        auxLeft:SetSize(frameBorderThickness, auxH);
+        auxRight:SetSize(frameBorderThickness, auxH);
+        auxRight:SetPosition(auxW - frameBorderThickness, 0);
+    end
+end
 
 -- Global reference tables for live layout swapping
 local iconOverlayList = {};
 local headerControlList = {};
 local auxIconControls = {};
 local auxLabelControls = {};
+
+local auxRowData = {};
 
 local function AddAuxRow(key, yPos, labelText, rowHeight)
     local h = rowHeight or 36;
@@ -182,7 +224,8 @@ local function AddAuxRow(key, yPos, labelText, rowHeight)
     icon:SetParent(AuxWindow);
     icon:SetSize(32, 32);
     icon:SetPosition(12, yPos);
-    icon:SetStretchMode(0); -- Crisp 1:1 rendering
+    icon:SetStretchMode(1);
+    icon:SetMouseVisible(false); -- Allows clicks to pass through to AuxWindow
     
     local lbl = Turbine.UI.Label();
     lbl:SetParent(AuxWindow);
@@ -190,9 +233,17 @@ local function AddAuxRow(key, yPos, labelText, rowHeight)
     lbl:SetPosition(50, yPos);
     lbl:SetText(labelText);
     lbl:SetForeColor(Turbine.UI.Color(1, 0.85, 0.85, 0.85));
+    lbl:SetMouseVisible(false); -- Allows clicks to pass through to AuxWindow
 
     auxIconControls[key] = icon;
     auxLabelControls[key] = lbl;
+
+    table.insert(auxRowData, {
+        icon = icon,
+        lbl = lbl,
+        baseY = yPos,
+        baseHeight = h
+    });
 end
 
 -- Render Aux Rows
@@ -247,7 +298,7 @@ RefreshLayoutIcons = function()
         end
     end
 
-    -- 2. Update Cluster Header Icons (Set nil first to clear old images completely)
+    -- 2. Update Cluster Header Icons
     for key, ctrl in pairs(headerControlList) do
         ctrl:SetBackground(nil);
         if hdrMap[key] then
@@ -279,6 +330,73 @@ RefreshLayoutIcons = function()
     end
 end
 
+-- Dynamic Scaling Rebuilder Engine
+local function RebuildOverlayUI()
+    local s = currentScale;
+
+    -- Update Main Window & Background
+    ControllerWindow:SetSize(math.floor(BASE_MAIN_WIDTH * s), math.floor(BASE_MAIN_HEIGHT * s));
+    backdropPanel:SetSize(math.floor(BASE_MAIN_WIDTH * s), math.floor(BASE_MAIN_HEIGHT * s));
+
+    -- Update Aux Window & Background
+    AuxWindow:SetSize(math.floor(BASE_AUX_WIDTH * s), math.floor(BASE_AUX_HEIGHT * s));
+    auxBackdropPanel:SetSize(math.floor(BASE_AUX_WIDTH * s), math.floor(BASE_AUX_HEIGHT * s));
+
+    -- Scale Aux Title Header
+    if auxTitle then
+        auxTitle:SetSize(math.floor(BASE_AUX_WIDTH * s), math.floor(25 * s));
+        auxTitle:SetPosition(0, math.floor(8 * s));
+    end
+
+    -- Scale Aux Rows (Icons and Labels)
+    for _, item in ipairs(auxRowData) do
+        item.icon:SetSize(math.floor(32 * s), math.floor(32 * s));
+        item.icon:SetPosition(math.floor(12 * s), math.floor(item.baseY * s));
+
+        item.lbl:SetSize(math.floor(160 * s), math.floor(item.baseHeight * s));
+        item.lbl:SetPosition(math.floor(50 * s), math.floor(item.baseY * s));
+    end
+
+    -- Redraw Golden Frame Borders
+    RedrawFrames();
+
+    -- Reposition Clusters
+    local clusterPositions = {
+        LB   = { x = 10,  y = 0 },
+        RB   = { x = 220, y = 0 },
+        LT   = { x = 10,  y = 160 },
+        BASE = { x = 220, y = 160 }
+    };
+
+    for key, group in pairs(clusterGroupList) do
+        local pos = clusterPositions[key];
+        if pos then
+            group:SetSize(math.floor(200 * s), math.floor(160 * s));
+            group:SetPosition(math.floor(pos.x * s), math.floor(pos.y * s));
+        end
+    end
+
+    -- Resize & Reposition Cluster Headers (32x32 Square Bounds)
+    for key, headerCtrl in pairs(headerControlList) do
+        headerCtrl:SetSize(math.floor(32 * s), math.floor(32 * s));
+        headerCtrl:SetPosition(math.floor(84 * s), 0);
+    end
+
+    -- Resize & Reposition Slot Containers and Overlay Icons
+    for i, item in ipairs(buttonSlotData) do
+        item.container:SetSize(math.floor(45 * s), math.floor(60 * s));
+        item.container:SetPosition(math.floor(item.baseX * s), math.floor(item.baseY * s));
+
+        -- LOTRO API quickslot native width fixed at 36x36
+        item.qs:SetSize(36, 36);
+        item.qs:SetPosition(math.floor(4 * s), 0);
+
+        -- Scale button overlay icon
+        item.overlay:SetSize(math.floor(28 * s), math.floor(28 * s));
+        item.overlay:SetPosition(math.floor(8 * s), math.floor(36 * s));
+    end
+end
+
 -- 2. Persistence Engine
 local quickslotsList = {};
 
@@ -288,6 +406,7 @@ SavePluginData = function()
     
     local saveData = {
         style = currentStyle,
+        scale = currentScale,
         opacity = currentOpacity,
         auxOpacity = currentAuxOpacity,
         x = left,
@@ -314,6 +433,10 @@ LoadPluginData = function()
     if (type(savedData) == "table") then
         if (savedData.style) then
             currentStyle = savedData.style;
+        end
+        if (savedData.scale) then
+            currentScale = savedData.scale;
+            RebuildOverlayUI();
         end
         if (savedData.opacity) then
             UpdateBackdropOpacity(savedData.opacity);
@@ -405,15 +528,17 @@ end
 
 -- 3. Quickslot Creation
 function CreateButtonSlot(parent, x, y, buttonIndex)
+    local s = currentScale;
+    
     local container = Turbine.UI.Control();
     container:SetParent(parent);
-    container:SetSize(45, 60);
-    container:SetPosition(x, y);
+    container:SetSize(math.floor(45 * s), math.floor(60 * s));
+    container:SetPosition(math.floor(x * s), math.floor(y * s));
 
     local qs = Turbine.UI.Lotro.Quickslot();
     qs:SetParent(container);
     qs:SetSize(36, 36);
-    qs:SetPosition(4, 0);
+    qs:SetPosition(math.floor(4 * s), 0);
     qs:SetVisible(true);
 
     qs.ShortcutChanged = function()
@@ -424,34 +549,40 @@ function CreateButtonSlot(parent, x, y, buttonIndex)
 
     local iconOverlay = Turbine.UI.Control();
     iconOverlay:SetParent(container);
-    iconOverlay:SetSize(28, 28); 
-    iconOverlay:SetPosition(8, 36); 
+    iconOverlay:SetSize(math.floor(28 * s), math.floor(28 * s)); 
+    iconOverlay:SetPosition(math.floor(8 * s), math.floor(36 * s)); 
     iconOverlay:SetMouseVisible(false);
     iconOverlay:SetStretchMode(1);
 
     table.insert(iconOverlayList, iconOverlay);
 
-    return qs;
+    table.insert(buttonSlotData, {
+        container = container,
+        qs = qs,
+        overlay = iconOverlay,
+        baseX = x,
+        baseY = y
+    });
+
+    return container;
 end
 
-local cyanColor   = Turbine.UI.Color(0.3, 0.8, 1.0);
-local greenColor  = Turbine.UI.Color(0.4, 1.0, 0.4);
-local orangeColor = Turbine.UI.Color(1.0, 0.6, 0.2);
-local purpleColor = Turbine.UI.Color(0.8, 0.5, 1.0);
-
--- 4. Build Clusters
 function BuildHotbarCluster(parentX, parentY, headerKey, fallbackText, titleColor)
+    local s = currentScale;
+
     local clusterGroup = Turbine.UI.Control();
     clusterGroup:SetParent(ControllerWindow);
-    clusterGroup:SetSize(200, 160);
-    clusterGroup:SetPosition(parentX, parentY);
+    clusterGroup:SetSize(math.floor(200 * s), math.floor(160 * s));
+    clusterGroup:SetPosition(math.floor(parentX * s), math.floor(parentY * s));
     clusterGroup:SetMouseVisible(false);
 
-    -- Header Icon Control
+    clusterGroupList[headerKey] = clusterGroup;
+
+    -- Header Icon Control (32x32 square, centered at 84, StretchMode 1)
     local headerIcon = Turbine.UI.Control();
     headerIcon:SetParent(clusterGroup);
-    headerIcon:SetSize(32, 32);         
-    headerIcon:SetPosition(84, 0);
+    headerIcon:SetSize(math.floor(32 * s), math.floor(32 * s));         
+    headerIcon:SetPosition(math.floor(84 * s), 0);
     headerIcon:SetMouseVisible(false);
     headerIcon:SetStretchMode(1);
     
@@ -473,10 +604,10 @@ function BuildHotbarCluster(parentX, parentY, headerKey, fallbackText, titleColo
 end
 
 -- 5. Build Layout
-BuildHotbarCluster(10,  0,   "LB",   "[ LB MODIFIER ]", greenColor);
-BuildHotbarCluster(220, 0,   "RB",   "[ RB MODIFIER ]", orangeColor);
-BuildHotbarCluster(10,  160, "LT",   "[ LT MODIFIER ]", purpleColor);
-BuildHotbarCluster(220, 160, "BASE", "[ BASE INPUTS ]", cyanColor);
+BuildHotbarCluster(10,  0,   "LB",   "[ LB MODIFIER ]");
+BuildHotbarCluster(220, 0,   "RB",   "[ RB MODIFIER ]");
+BuildHotbarCluster(10,  160, "LT",   "[ LT MODIFIER ]");
+BuildHotbarCluster(220, 160, "BASE", "[ BASE INPUTS ]");
 
 -- 6. Options Panel
 local optionsPanel = Turbine.UI.Control();
@@ -490,7 +621,7 @@ optionsTitle:SetText("Controller Hotbar Overlay Options");
 optionsTitle:SetFont(Turbine.UI.Lotro.Font.TrajanPro18);
 optionsTitle:SetForeColor(Turbine.UI.Color(1, 0.9, 0.2));
 
--- Controller Style Checkboxes (Mutually Exclusive)
+-- Controller Style Checkboxes
 local styleTitle = Turbine.UI.Label();
 styleTitle:SetParent(optionsPanel);
 styleTitle:SetSize(350, 20);
@@ -522,7 +653,6 @@ xboxCheck.CheckedChanged = function()
         RefreshLayoutIcons();
         SavePluginData();
     elseif not psCheck:IsChecked() then
-        -- Prevent unchecking both
         updatingToggle = true;
         xboxCheck:SetChecked(true);
         updatingToggle = false;
@@ -539,7 +669,6 @@ psCheck.CheckedChanged = function()
         RefreshLayoutIcons();
         SavePluginData();
     elseif not xboxCheck:IsChecked() then
-        -- Prevent unchecking both
         updatingToggle = true;
         psCheck:SetChecked(true);
         updatingToggle = false;
@@ -624,6 +753,38 @@ auxCheckbox.CheckedChanged = function()
     SavePluginData();
 end
 
+-- UI Scale Controls
+local scaleLabel = Turbine.UI.Label();
+scaleLabel:SetParent(optionsPanel);
+scaleLabel:SetSize(350, 20);
+scaleLabel:SetPosition(10, 240);
+scaleLabel:SetFont(Turbine.UI.Lotro.Font.Verdana14);
+
+local function UpdateScaleSliderLabel(val)
+    local pct = math.floor((val or 1.0) * 100);
+    scaleLabel:SetText("UI Scale Multiplier: " .. tostring(pct) .. "%");
+end
+
+local scaleSlider = Turbine.UI.Lotro.ScrollBar();
+scaleSlider:SetParent(optionsPanel);
+scaleSlider:SetOrientation(Turbine.UI.Orientation.Horizontal);
+scaleSlider:SetSize(250, 10);
+scaleSlider:SetPosition(10, 265);
+scaleSlider:SetMinimum(80);   -- Recommended minimum scale
+scaleSlider:SetMaximum(140);  -- Maximum scale
+scaleSlider:SetSmallChange(5);
+scaleSlider:SetLargeChange(10);
+scaleSlider:SetValue(math.floor(currentScale * 100));
+
+UpdateScaleSliderLabel(currentScale);
+
+scaleSlider.ValueChanged = function()
+    currentScale = scaleSlider:GetValue() / 100;
+    UpdateScaleSliderLabel(currentScale);
+    RebuildOverlayUI();
+    SavePluginData();
+end
+
 -- Register Options Panel
 if (plugin ~= nil) then
     plugin.GetOptionsPanel = function()
@@ -653,6 +814,9 @@ if (auxSlider ~= nil) then
 end
 if (auxCheckbox ~= nil) then
     auxCheckbox:SetChecked(showAuxPanel);
+end
+if (scaleSlider ~= nil) then
+    scaleSlider:SetValue(math.floor(currentScale * 100));
 end
 
 Turbine.Shell.WriteLine("Controller Hotbar Loaded with Options!");
