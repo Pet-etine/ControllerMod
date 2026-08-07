@@ -2,12 +2,12 @@
     <Information>
         <Name>ControllerMod</Name>
         <Author>Patetine</Author>
-        <Version>1.1.5</Version>
+        <Version>1.1.6</Version>
         <Description>A Cross-Hotbar overlay tailored for controller play in LOTRO. Made to work seamlessly with Patetine's Controller Configuration on Steam Input!
 
 Usage Tips:
 • Hold Ctrl + Left-Click Drag to reposition the UI.
-• Access /plugins manager to adjust background opacity. And Change to PlayStation Icons</Description>
+• Access /plugins manager to adjust background opacity, size and other options. And Change to PlayStation Icons</Description>
     <Image>Patetine/ControllerMod/icon.tga</Image>
     </Information>
     <!-- Patetine (Namespace) -> ControllerMod (Subfolder) -> Main (.lua) -->
