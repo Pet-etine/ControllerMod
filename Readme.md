@@ -134,28 +134,21 @@ Repeat the same process for any other buttons that require multiple actions.
 * **Opacity Control:** Fine-tune the backdrop and frame transparency using the opacity slider in the Plugin Manager **Options** tab.
 * **Quickslot Drag-and-Drop:** Drag skills, items, or macros directly from your character panel onto any overlay slot so they match your preferred controller layout.
 
-📜 Credits & Acknowledgments
+---
 
-    Author & Developer: Pet.e-tine
+### 📜 Credits & Acknowledgments
 
-    AI Collaborator: Gemini (Code Assistance & Documentation Support)
+* **Author & Developer:** Pet.e-tine
+* **AI Collaborator:** Gemini (Code Assistance & Documentation Support)
+* **Framework:** Powered by the LOTRO API (`Turbine.UI`)
 
-    Framework: Powered by the LOTRO API (Turbine.UI)
+#### Third-Party Visual Assets & Licenses
 
-Third-Party Visual Assets & Licenses
-
-    Xbox Series & PlayStation Button Icons & UI Assets:
-
-        Author: Zacksly (zacksly.itch.io)
-
-        License: CC BY 3.0
-
-        Note: Original assets were modified (cropped, scaled, color-adjusted, and formatted as uncompressed 32-bit TGA files) for LOTRO UI compatibility and dynamic style-swapping support.
-
-    Game Controller Icon:
-
-        Source: Icons8
-
-        License: CC BY 3.0
-
-        Note: Adapted for plugin manager and icon branding.
+* **Xbox Series & PlayStation Button Icons & UI Assets:**
+  * **Author:** Zacksly ([zacksly.itch.io](https://zacksly.itch.io))
+  * **License:** CC BY 3.0
+  * **Note:** Original assets were modified (cropped, scaled, color-adjusted, and formatted as uncompressed 32-bit TGA files) for LOTRO UI compatibility and dynamic style-swapping support.
+* **Game Controller Icon:**
+  * **Source:** Icons8
+  * **License:** CC BY 3.0
+  * **Note:** Adapted for plugin manager and icon branding.
