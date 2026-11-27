@@ -2,6 +2,14 @@
 
 This plugin provides an on-screen cross-hotbar overlay designed specifically for controller play in *Lord of the Rings Online*. It translates your physical controller inputs into in-game skill execution seamlessly using modifier keys.
 
+**With skills assigned:**
+
+![ControllerMod overlay with skills assigned to every slot](screenshots/filled.png)
+
+**Empty layout:**
+
+![ControllerMod overlay with empty slots showing the button layout](screenshots/empty.png)
+
 ---
 
 ### 📦 Installation Guide
