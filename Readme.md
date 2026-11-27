@@ -33,25 +33,20 @@ This plugin provides an on-screen cross-hotbar overlay designed specifically for
    * Find **ControllerMod** under the `Patetine` directory and check the box to load it (or check **"Automatically load for this character"**).
    * Alternatively, type `/plugins load ControllerMod` in chat.
 
-⚙️ How It Works (Button Mapping)
+---
+
+### ⚙️ How It Works (Button Mapping)
 
 The overlay is split into 4 primary input clusters of 8 slots each (4 D-Pad directions + 4 Face buttons), giving you instant access to 32 abilities:
 
-    Number Keys (1 – 8): Bound to your core action inputs across all clusters:
-
-        D-Pad: 5 (Up), 6 (Down), 7 (Left), 8 (Right)
-
-        Face Buttons: 1 (A / Cross), 2 (B / Circle), 3 (X / Square), 4 (Y / Triangle)
-
-    Modifier Triggers & Bumpers:
-
-        Base Inputs (No Modifier): Triggers keys 1 through 8 directly.
-
-        LB / L1 Cluster (Shift): Holding LB / L1 sends Shift + 1 through Shift + 8.
-
-        RB / R1 Cluster (Ctrl): Holding RB / R1 sends Ctrl + 1 through Ctrl + 8.
-
-        LT / L2 Cluster (Alt): Holding LT / L2 sends Alt + 1 through Alt + 8.
+* **Number Keys (`1` – `8`):** Bound to your core action inputs across all clusters:
+  * **D-Pad:** `5` (Up), `6` (Down), `7` (Left), `8` (Right)
+  * **Face Buttons:** `1` (A / Cross), `2` (B / Circle), `3` (X / Square), `4` (Y / Triangle)
+* **Modifier Triggers & Bumpers:**
+  * **Base Inputs (No Modifier):** Triggers keys `1` through `8` directly.
+  * **LB / L1 Cluster (Shift):** Holding LB / L1 sends `Shift + 1` through `Shift + 8`.
+  * **RB / R1 Cluster (Ctrl):** Holding RB / R1 sends `Ctrl + 1` through `Ctrl + 8`.
+  * **LT / L2 Cluster (Alt):** Holding LT / L2 sends `Alt + 1` through `Alt + 8`.
 
 🔧 Steam / Controller Configuration
 
