@@ -6,7 +6,7 @@ This plugin provides an on-screen cross-hotbar overlay designed specifically for
 
 ### 📦 Installation Guide
 
-1. **Download** the provided zip file (`ControllerMod.zip`).
+1. **Download** `ControllerMod.zip` from the [latest release](https://github.com/antonkesy/ControllerMod/releases/latest) on GitHub (under **Assets**).
 2. **Extract** the contents into your LOTRO Plugins directory:
    * **Windows:**
      ```text
