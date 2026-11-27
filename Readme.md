@@ -2,11 +2,19 @@
 
 This plugin provides an on-screen cross-hotbar overlay designed specifically for controller play in *Lord of the Rings Online*. It translates your physical controller inputs into in-game skill execution seamlessly using modifier keys.
 
+**With skills assigned:**
+
+![ControllerMod overlay with skills assigned to every slot](screenshots/filled.png)
+
+**Empty layout:**
+
+![ControllerMod overlay with empty slots showing the button layout](screenshots/empty.png)
+
 ---
 
 ### 📦 Installation Guide
 
-1. **Download** the provided zip file (`ControllerMod.zip`).
+1. **Download** `ControllerMod.zip` from the [latest release](https://github.com/antonkesy/ControllerMod/releases/latest) on GitHub (under **Assets**).
 2. **Extract** the contents into your LOTRO Plugins directory:
    * **Windows:**
      ```text
@@ -26,40 +34,33 @@ This plugin provides an on-screen cross-hotbar overlay designed specifically for
 
    .../Documents/The Lord of the Rings Online/Plugins/Patetine/
    └── ControllerMod.plugin
+   ```
 
-    Load the Plugin In-Game:
+4. **Load the Plugin In-Game:**
+   * Open the chat box and type `/plugins manager`.
+   * Find **ControllerMod** under the `Patetine` directory and check the box to load it (or check **"Automatically load for this character"**).
+   * Alternatively, type `/plugins load ControllerMod` in chat.
 
-        Open the chat box in-game and type /plugins manager.
+---
 
-        Find ControllerMod under the Patetine directory in the list and check the box to load it (or check "Automatically load for this character").
-
-        Alternatively, type /plugins load ControllerMod in chat.
-
-⚙️ How It Works (Button Mapping)
+### ⚙️ How It Works (Button Mapping)
 
 The overlay is split into 4 primary input clusters of 8 slots each (4 D-Pad directions + 4 Face buttons), giving you instant access to 32 abilities:
 
-    Number Keys (1 – 8): Bound to your core action inputs across all clusters:
+* **Number Keys (`1` – `8`):** Bound to your core action inputs across all clusters:
+  * **D-Pad:** `5` (Up), `6` (Down), `7` (Left), `8` (Right)
+  * **Face Buttons:** `1` (A / Cross), `2` (B / Circle), `3` (X / Square), `4` (Y / Triangle)
+* **Modifier Triggers & Bumpers:**
+  * **Base Inputs (No Modifier):** Triggers keys `1` through `8` directly.
+  * **LB / L1 Cluster (Shift):** Holding LB / L1 sends `Shift + 1` through `Shift + 8`.
+  * **RB / R1 Cluster (Ctrl):** Holding RB / R1 sends `Ctrl + 1` through `Ctrl + 8`.
+  * **LT / L2 Cluster (Alt):** Holding LT / L2 sends `Alt + 1` through `Alt + 8`.
 
-        D-Pad: 5 (Up), 6 (Down), 7 (Left), 8 (Right)
+---
 
-        Face Buttons: 1 (A / Cross), 2 (B / Circle), 3 (X / Square), 4 (Y / Triangle)
+### 🔧 Steam / Controller Configuration
 
-    Modifier Triggers & Bumpers:
-
-        Base Inputs (No Modifier): Triggers keys 1 through 8 directly.
-
-        LB / L1 Cluster (Shift): Holding LB / L1 sends Shift + 1 through Shift + 8.
-
-        RB / R1 Cluster (Ctrl): Holding RB / R1 sends Ctrl + 1 through Ctrl + 8.
-
-        LT / L2 Cluster (Alt): Holding LT / L2 sends Alt + 1 through Alt + 8.
-
-🔧 Steam / Controller Configuration
-
-# ControllerMod Setup Guide
-
-## 1. Quick Import Link
+#### 1. Quick Import Link
 
 If you are on PC, try opening this direct link in your web browser with Steam running:
 
@@ -71,9 +72,9 @@ steam://controllerconfig/212500/3779183885
 
 ---
 
-## 2. Controller Button Mappings
+#### 2. Controller Button Mappings
 
-### Movement & Camera
+##### Movement & Camera
 
 - **Left Joystick:** `W` / `A` / `S` / `D` (Movement)
 - **Left Stick Click (L3):**
@@ -82,7 +83,7 @@ steam://controllerconfig/212500/3779183885
 - **Right Joystick:** Joystick Mouse (Camera control)
 - **Right Stick Click (R3):** Right Mouse Click (Target / Interact)
 
-### Action Bars & Modifiers
+##### Action Bars & Modifiers
 
 The UI uses shoulder buttons as modifier keys to access all 32 quickslots across 4 action bars:
 
@@ -95,7 +96,7 @@ The UI uses shoulder buttons as modifier keys to access all 32 quickslots across
 | **Left Trigger (LT)** | `Alt` | Modifier Key (Alt Bar) |
 | **Right Trigger (RT)** | Left Mouse Click | Target Selection / Drag-and-Drop |
 
-### System & Menus
+##### System & Menus
 
 - **View / Select Button (Left Menu):**
   - **Press:** `M` (Map)
@@ -109,7 +110,7 @@ The UI uses shoulder buttons as modifier keys to access all 32 quickslots across
 
 ---
 
-## 3. Configuring Multi-Action Buttons in Steam
+#### 3. Configuring Multi-Action Buttons in Steam
 
 To assign multiple commands (Press, Long Press, Double Press) to a single button (such as Select or Start):
 
@@ -124,7 +125,7 @@ Repeat the same process for any other buttons that require multiple actions.
 
 ---
 
-## 4. In-Game Skill Assignment (Drag-and-Drop)
+#### 4. In-Game Skill Assignment (Drag-and-Drop)
 
 1. Open your **Skill Panel** (`K` or double-press the **Start** button).
 2. Use the **Right Joystick** to move the cursor over a skill icon.
@@ -132,39 +133,30 @@ Repeat the same process for any other buttons that require multiple actions.
 4. Drag the icon onto the desired **ControllerMod** quickslot.
 5. Release **RT** to place the skill.
 
+---
 
-📌 Features & In-Game Controls
+### 📌 Features & In-Game Controls
 
-    Repositioning: Hold Ctrl + Left Click and drag the overlay box anywhere on your screen to adjust its position.
+* **Repositioning:** Hold `Ctrl` + Left Click and drag the overlay box anywhere on your screen to adjust its position.
+* **Controller Style Swapping:** Open `/plugins manager`, select **ControllerMod**, navigate to the **Options** tab, and toggle between Xbox and PlayStation button icon styles to match your gamepad setup.
+* **Opacity Control:** Fine-tune the backdrop and frame transparency using the opacity slider in the Plugin Manager **Options** tab.
+* **Quickslot Drag-and-Drop:** Drag skills, items, or macros directly from your character panel onto any overlay slot so they match your preferred controller layout.
 
-    Controller Style Swapping: Open /plugins manager, select ControllerMod, navigate to the Options tab, and toggle between Xbox and PlayStation button icon styles to match your gamepad setup.
+---
 
-    Opacity Control: Fine-tune the backdrop and frame transparency using the opacity slider in the Plugin Manager Options tab.
+### 📜 Credits & Acknowledgments
 
-    Quickslot Drag-and-Drop: Drag skills, items, or macros directly from your character panel onto any overlay slot so they match your preferred controller layout.
+* **Author & Developer:** Pet.e-tine
+* **AI Collaborator:** Gemini (Code Assistance & Documentation Support)
+* **Framework:** Powered by the LOTRO API (`Turbine.UI`)
 
-📜 Credits & Acknowledgments
+#### Third-Party Visual Assets & Licenses
 
-    Author & Developer: Pet.e-tine
-
-    AI Collaborator: Gemini (Code Assistance & Documentation Support)
-
-    Framework: Powered by the LOTRO API (Turbine.UI)
-
-Third-Party Visual Assets & Licenses
-
-    Xbox Series & PlayStation Button Icons & UI Assets:
-
-        Author: Zacksly (zacksly.itch.io)
-
-        License: CC BY 3.0
-
-        Note: Original assets were modified (cropped, scaled, color-adjusted, and formatted as uncompressed 32-bit TGA files) for LOTRO UI compatibility and dynamic style-swapping support.
-
-    Game Controller Icon:
-
-        Source: Icons8
-
-        License: CC BY 3.0
-
-        Note: Adapted for plugin manager and icon branding.
+* **Xbox Series & PlayStation Button Icons & UI Assets:**
+  * **Author:** Zacksly ([zacksly.itch.io](https://zacksly.itch.io))
+  * **License:** CC BY 3.0
+  * **Note:** Original assets were modified (cropped, scaled, color-adjusted, and formatted as uncompressed 32-bit TGA files) for LOTRO UI compatibility and dynamic style-swapping support.
+* **Game Controller Icon:**
+  * **Source:** Icons8
+  * **License:** CC BY 3.0
+  * **Note:** Adapted for plugin manager and icon branding.
