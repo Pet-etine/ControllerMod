@@ -26,14 +26,12 @@ This plugin provides an on-screen cross-hotbar overlay designed specifically for
 
    .../Documents/The Lord of the Rings Online/Plugins/Patetine/
    └── ControllerMod.plugin
+   ```
 
-    Load the Plugin In-Game:
-
-        Open the chat box in-game and type /plugins manager.
-
-        Find ControllerMod under the Patetine directory in the list and check the box to load it (or check "Automatically load for this character").
-
-        Alternatively, type /plugins load ControllerMod in chat.
+4. **Load the Plugin In-Game:**
+   * Open the chat box and type `/plugins manager`.
+   * Find **ControllerMod** under the `Patetine` directory and check the box to load it (or check **"Automatically load for this character"**).
+   * Alternatively, type `/plugins load ControllerMod` in chat.
 
 ⚙️ How It Works (Button Mapping)
 
