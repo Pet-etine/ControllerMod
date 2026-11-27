@@ -125,16 +125,14 @@ Repeat the same process for any other buttons that require multiple actions.
 4. Drag the icon onto the desired **ControllerMod** quickslot.
 5. Release **RT** to place the skill.
 
+---
 
-📌 Features & In-Game Controls
+### 📌 Features & In-Game Controls
 
-    Repositioning: Hold Ctrl + Left Click and drag the overlay box anywhere on your screen to adjust its position.
-
-    Controller Style Swapping: Open /plugins manager, select ControllerMod, navigate to the Options tab, and toggle between Xbox and PlayStation button icon styles to match your gamepad setup.
-
-    Opacity Control: Fine-tune the backdrop and frame transparency using the opacity slider in the Plugin Manager Options tab.
-
-    Quickslot Drag-and-Drop: Drag skills, items, or macros directly from your character panel onto any overlay slot so they match your preferred controller layout.
+* **Repositioning:** Hold `Ctrl` + Left Click and drag the overlay box anywhere on your screen to adjust its position.
+* **Controller Style Swapping:** Open `/plugins manager`, select **ControllerMod**, navigate to the **Options** tab, and toggle between Xbox and PlayStation button icon styles to match your gamepad setup.
+* **Opacity Control:** Fine-tune the backdrop and frame transparency using the opacity slider in the Plugin Manager **Options** tab.
+* **Quickslot Drag-and-Drop:** Drag skills, items, or macros directly from your character panel onto any overlay slot so they match your preferred controller layout.
 
 📜 Credits & Acknowledgments
 
