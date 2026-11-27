@@ -48,11 +48,11 @@ The overlay is split into 4 primary input clusters of 8 slots each (4 D-Pad dire
   * **RB / R1 Cluster (Ctrl):** Holding RB / R1 sends `Ctrl + 1` through `Ctrl + 8`.
   * **LT / L2 Cluster (Alt):** Holding LT / L2 sends `Alt + 1` through `Alt + 8`.
 
-🔧 Steam / Controller Configuration
+---
 
-# ControllerMod Setup Guide
+### 🔧 Steam / Controller Configuration
 
-## 1. Quick Import Link
+#### 1. Quick Import Link
 
 If you are on PC, try opening this direct link in your web browser with Steam running:
 
@@ -64,9 +64,9 @@ steam://controllerconfig/212500/3779183885
 
 ---
 
-## 2. Controller Button Mappings
+#### 2. Controller Button Mappings
 
-### Movement & Camera
+##### Movement & Camera
 
 - **Left Joystick:** `W` / `A` / `S` / `D` (Movement)
 - **Left Stick Click (L3):**
@@ -75,7 +75,7 @@ steam://controllerconfig/212500/3779183885
 - **Right Joystick:** Joystick Mouse (Camera control)
 - **Right Stick Click (R3):** Right Mouse Click (Target / Interact)
 
-### Action Bars & Modifiers
+##### Action Bars & Modifiers
 
 The UI uses shoulder buttons as modifier keys to access all 32 quickslots across 4 action bars:
 
@@ -88,7 +88,7 @@ The UI uses shoulder buttons as modifier keys to access all 32 quickslots across
 | **Left Trigger (LT)** | `Alt` | Modifier Key (Alt Bar) |
 | **Right Trigger (RT)** | Left Mouse Click | Target Selection / Drag-and-Drop |
 
-### System & Menus
+##### System & Menus
 
 - **View / Select Button (Left Menu):**
   - **Press:** `M` (Map)
@@ -102,7 +102,7 @@ The UI uses shoulder buttons as modifier keys to access all 32 quickslots across
 
 ---
 
-## 3. Configuring Multi-Action Buttons in Steam
+#### 3. Configuring Multi-Action Buttons in Steam
 
 To assign multiple commands (Press, Long Press, Double Press) to a single button (such as Select or Start):
 
@@ -117,7 +117,7 @@ Repeat the same process for any other buttons that require multiple actions.
 
 ---
 
-## 4. In-Game Skill Assignment (Drag-and-Drop)
+#### 4. In-Game Skill Assignment (Drag-and-Drop)
 
 1. Open your **Skill Panel** (`K` or double-press the **Start** button).
 2. Use the **Right Joystick** to move the cursor over a skill icon.
